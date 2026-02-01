@@ -406,56 +406,52 @@
             initApp();
         });
         
-        // Clear cache helper
-        function clearCache() {
-            if (confirm('Hapus semua cache? Data akan di-reload dari Google Sheets.')) {
-                localStorage.clear();
-                location.reload();
+        // Page switching handler
+        function switchPage(pageName) {
+            console.log('Switching to page:', pageName);
+            
+            // Hide all pages
+            document.querySelectorAll('.page-content').forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            // Show selected page
+            const targetPage = document.getElementById(`page-${pageName}`);
+            if (targetPage) {
+                targetPage.classList.add('active');
             }
-        }
-        
-        // Placeholder functions for new features (to prevent console errors)
-        // These should be implemented in their respective JS files
-        
-        function showAddDebtModal() {
-            console.log('showAddDebtModal called - implement in debts.js');
-            alert('Fitur ini akan segera tersedia! Pastikan file debts.js sudah ada.');
-        }
-        
-        function filterDebts(type) {
-            console.log('filterDebts called:', type, '- implement in debts.js');
-        }
-        
-        function generateMonthlyReport() {
-            console.log('generateMonthlyReport called - implement in reports.js');
-        }
-        
-        function exportReportPDF() {
-            console.log('exportReportPDF called - implement in reports.js');
-            alert('Fitur export PDF akan segera tersedia!');
-        }
-        
-        function sendReportWhatsApp() {
-            console.log('sendReportWhatsApp called - implement in whatsapp.js');
-            alert('Fitur kirim WhatsApp akan segera tersedia!');
-        }
-        
-        function testWhatsAppConnection() {
-            console.log('testWhatsAppConnection called - implement in whatsapp.js');
-            alert('Test koneksi WhatsApp - fitur akan segera tersedia!');
-        }
-        
-        function sendManualWhatsApp(type) {
-            console.log('sendManualWhatsApp called:', type, '- implement in whatsapp.js');
-            alert('Fitur kirim WhatsApp ' + type + ' akan segera tersedia!');
-        }
-        
-        function refreshData() {
-            console.log('refreshData called');
-            if (confirm('Reload semua data dari Google Sheets?')) {
-                localStorage.clear();
-                location.reload();
+            
+            // Update navigation active states (desktop)
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+                if (link.dataset.page === pageName) {
+                    link.classList.add('active');
+                }
+            });
+            
+            // Update navigation active states (mobile)
+            document.querySelectorAll('.bottom-nav-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.dataset.page === pageName) {
+                    btn.classList.add('active');
+                }
+            });
+            
+            // Initialize page-specific content
+            if (pageName === 'transactions') {
+                initTransactionsPage();
+            } else if (pageName === 'allocations') {
+                initAllocationsPage();
+            } else if (pageName === 'debts') {
+                initDebtsPage();
+            } else if (pageName === 'reports') {
+                initReportsPage();
+            } else if (pageName === 'settings') {
+                initSettingsPage();
             }
+            
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
     </script>
 </body>

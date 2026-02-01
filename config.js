@@ -24,7 +24,7 @@ const SHEET_NAMES = {
 // WhatsApp Configuration (Optional - for manual trigger)
 const WA_CONFIG = {
     enabled: true,
-    number: '628123456789' // GANTI DENGAN NOMOR ANDA!
+    number: '62895397978257' // GANTI DENGAN NOMOR ANDA!
 };
 
 // API Base URLs

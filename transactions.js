@@ -693,7 +693,7 @@ async function submitTransaction(event) {
     } catch (error) {
         console.error('Submit transaction error:', error);
         hideLoading();
-        showAlert('❌ Terjadi kesalahan. Silakan coba lagi.', 'error');
+        showAlert('❌ Terjadi kesalahan: ' + error.message, 'error');
     }
 }
 

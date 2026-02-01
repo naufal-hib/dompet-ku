@@ -7,7 +7,7 @@ const SPREADSHEET_ID = '1EFAvKsfmDZtQMIGgSxlmKRlxU752_brCmzZUX3HJdoM'; // GANTI 
 const API_KEY = 'AIzaSyBYxMfJkJSaaKLXcjd2y-0RYBNdFetfz_I'; // GANTI DENGAN API KEY ANDA!
 
 // Google Apps Script Web App URL
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxgwqKWf8mdMUvVVUDBEe5L_uXOpPgCJmloDh1AQbSSgmejXigIJIy6A1NhiUw__Uv4/exec'; // GANTI DENGAN URL ANDA!
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxJdKMW6ttLBILdavjsEcocJzpBdoxvq1kml59XX1z9vZGrxTYZ3pLqtc1ia3N_xCo5/exec'; // GANTI DENGAN URL ANDA!
 
 // Sheet Names
 const SHEET_NAMES = {

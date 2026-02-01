@@ -46,7 +46,7 @@
             </div>
             
             <!-- Navigation -->
-            <nav class="space-y-2">
+            <nav class="flex-1 px-4 py-4 space-y-1">
                 <a href="#" onclick="switchPage('dashboard'); return false;" class="nav-link active" data-page="dashboard">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
@@ -136,7 +136,7 @@
                         <div class="flex items-center justify-between mb-2">
                             <span class="text-sm font-medium text-gray-600">📈 Pemasukan</span>
                         </div>
-                        <p class="text-2xl sm:text-3xl font-bold text-green-600" id="totalPemasukan">Rp 0</p>
+                        <p class="text-2xl sm:text-3xl font-bold text-green-600" id="totalIncome">Rp 0</p>
                         <p class="text-xs sm:text-sm text-gray-500 mt-1">Bulan ini</p>
                     </div>
 
@@ -145,149 +145,23 @@
                         <div class="flex items-center justify-between mb-2">
                             <span class="text-sm font-medium text-gray-600">📉 Pengeluaran</span>
                         </div>
-                        <p class="text-2xl sm:text-3xl font-bold text-red-600" id="totalPengeluaran">Rp 0</p>
+                        <p class="text-2xl sm:text-3xl font-bold text-red-600" id="totalExpense">Rp 0</p>
                         <p class="text-xs sm:text-sm text-gray-500 mt-1">Bulan ini</p>
                     </div>
 
-                    <!-- Saldo Bulan Ini -->
+                    <!-- Sisa Budget -->
                     <div class="card">
                         <div class="flex items-center justify-between mb-2">
-                            <span class="text-sm font-medium text-gray-600">💵 Saldo</span>
+                            <span class="text-sm font-medium text-gray-600">💵 Sisa Budget</span>
                         </div>
-                        <p class="text-2xl sm:text-3xl font-bold text-blue-600" id="saldoBulanIni">Rp 0</p>
-                        <p class="text-xs sm:text-sm text-gray-500 mt-1">Pemasukan - Pengeluaran</p>
-                    </div>
-                </div>
-                <!-- TRANSACTIONS PAGE -->
-                <div id="page-transactions" class="page">
-                    <h2 class="text-2xl font-bold text-gray-900 mb-6">📋 Transaksi</h2>
-                    
-                    <div class="card mb-6">
-                        <h3 class="text-lg font-bold text-gray-900 mb-4">🔍 Filter</h3>
-                        <div id="transactionFilters"></div>
-                    </div>
-                    
-                    <div id="transactionSummary" class="mb-6"></div>
-                    
-                    <div class="card">
-                        <div class="flex items-center justify-between mb-4">
-                            <p id="transactionRecordCount" class="text-sm text-gray-600"></p>
-                        </div>
-                        <div class="overflow-x-auto">
-                            <table class="w-full">
-                                <thead class="bg-gray-50 border-b">
-                                    <tr>
-                                        <th class="px-3 py-3 text-left text-xs font-bold text-gray-700">No</th>
-                                        <th class="px-3 py-3 text-left text-xs font-bold text-gray-700">Tanggal</th>
-                                        <th class="px-3 py-3 text-left text-xs font-bold text-gray-700">Tipe</th>
-                                        <th class="px-3 py-3 text-left text-xs font-bold text-gray-700">Kategori</th>
-                                        <th class="px-3 py-3 text-left text-xs font-bold text-gray-700">Akun</th>
-                                        <th class="px-3 py-3 text-right text-xs font-bold text-gray-700">Nominal</th>
-                                        <th class="px-3 py-3 text-left text-xs font-bold text-gray-700">Keterangan</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="transactionsTableBody"></tbody>
-                            </table>
-                        </div>
-                        <div id="transactionPagination"></div>
-                    </div>
-                </div>
-                
-                <!-- ALLOCATIONS PAGE -->
-                <div id="page-allocations" class="page">
-                    <div id="allocationMonthSelector" class="mb-6"></div>
-                    <div id="allocationSummary"></div>
-                    <div id="allocationsList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
-                </div>
-                
-                <!-- DEBTS PAGE -->
-                <div id="page-debts" class="page">
-                    <div class="flex items-center justify-between mb-6">
-                        <h2 class="text-2xl font-bold text-gray-900">💰 Utang & Piutang</h2>
-                        <button onclick="showAddDebtModal()" class="btn btn-primary">➕ Tambah</button>
-                    </div>
-                    
-                    <div id="debtSummary" class="mb-6"></div>
-                    
-                    <div class="flex space-x-2 mb-6">
-                        <button onclick="filterDebts('all')" data-filter="all" class="btn bg-green-600 text-white text-sm">Semua</button>
-                        <button onclick="filterDebts('utang')" data-filter="utang" class="btn bg-gray-100 text-gray-700 text-sm">💸 Utang</button>
-                        <button onclick="filterDebts('piutang')" data-filter="piutang" class="btn bg-gray-100 text-gray-700 text-sm">💰 Piutang</button>
-                    </div>
-                    
-                    <div id="debtsList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
-                </div>
-                
-                <!-- REPORTS PAGE -->
-                <div id="page-reports" class="page">
-                    <h2 class="text-2xl font-bold text-gray-900 mb-6">📊 Laporan</h2>
-                    
-                    <div class="card mb-6">
-                        <div class="flex items-center justify-between gap-4">
-                            <div class="flex-1">
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Pilih Bulan</label>
-                                <input type="month" id="reportBulan" onchange="generateMonthlyReport()" class="input">
-                            </div>
-                            <div class="flex space-x-2">
-                                <button onclick="exportReportPDF()" class="btn btn-danger text-sm">📥 PDF</button>
-                                <button onclick="sendReportWhatsApp()" class="btn btn-primary text-sm">📱 WA</button>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div id="reportSummary" class="mb-6"></div>
-                    
-                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-                        <div class="card">
-                            <h3 class="text-lg font-bold mb-4">📈 Top 5 Pengeluaran</h3>
-                            <div id="reportTopExpenses"></div>
-                        </div>
-                        <div class="card">
-                            <h3 class="text-lg font-bold mb-4">📊 Grafik</h3>
-                            <div class="chart-container">
-                                <canvas id="reportChart"></canvas>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="card">
-                        <h3 class="text-lg font-bold mb-4">💡 Rekomendasi</h3>
-                        <div id="reportRecommendation"></div>
-                    </div>
-                </div>
-                
-                <!-- SETTINGS PAGE -->
-                <div id="page-settings" class="page">
-                    <h2 class="text-2xl font-bold text-gray-900 mb-6">⚙️ Pengaturan</h2>
-                    
-                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                        <div class="card">
-                            <h3 class="text-lg font-bold mb-4">📱 WhatsApp</h3>
-                            <div class="space-y-4">
-                                <button onclick="testWhatsAppConnection()" class="w-full btn btn-primary">🧪 Test Koneksi</button>
-                                <button onclick="sendManualWhatsApp('daily')" class="w-full btn btn-secondary">📊 Kirim Harian</button>
-                                <button onclick="sendManualWhatsApp('weekly')" class="w-full btn btn-secondary">📈 Kirim Mingguan</button>
-                                <button onclick="sendManualWhatsApp('balance')" class="w-full btn btn-secondary">💰 Kirim Saldo</button>
-                            </div>
-                        </div>
-                        
-                        <div class="card">
-                            <h3 class="text-lg font-bold mb-4">💾 Data</h3>
-                            <div class="space-y-4">
-                                <button onclick="refreshData()" class="w-full btn btn-primary">🔄 Refresh Data</button>
-                                <button onclick="clearCache()" class="w-full btn btn-secondary">🗑️ Hapus Cache</button>
-                                <div class="bg-gray-50 rounded-lg p-4">
-                                    <p class="text-sm text-gray-600">Last Update:</p>
-                                    <p id="lastUpdateTime" class="text-xs text-gray-500 mt-1">-</p>
-                                </div>
-                            </div>
-                        </div>
+                        <p class="text-2xl sm:text-3xl font-bold text-blue-600" id="remainingBudget">Rp 0</p>
+                        <p class="text-xs sm:text-sm text-gray-500 mt-1" id="budgetPercentage">0%</p>
                     </div>
                 </div>
 
-                <!-- Akun & Chart -->
+                <!-- Content Grid -->
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-                    <!-- Akun Saya -->
+                    <!-- Akun -->
                     <div class="card">
                         <div class="flex items-center justify-between mb-4">
                             <h3 class="text-lg font-bold text-gray-900">Akun Saya</h3>
@@ -327,30 +201,131 @@
                 </div>
             </div>
 
-            <!-- Other Pages (Transactions, Allocations, etc.) -->
+            <!-- TRANSACTIONS PAGE -->
             <div id="page-transactions" class="page-content">
-                <h2 class="text-2xl font-bold text-gray-900 mb-6">Transaksi</h2>
-                <p class="text-gray-600">Coming soon...</p>
+                <h2 class="text-2xl font-bold text-gray-900 mb-6">📋 Transaksi</h2>
+                
+                <div class="card mb-6">
+                    <h3 class="text-lg font-bold text-gray-900 mb-4">🔍 Filter</h3>
+                    <div id="transactionFilters"></div>
+                </div>
+                
+                <div id="transactionSummary" class="mb-6"></div>
+                
+                <div class="card">
+                    <div class="flex items-center justify-between mb-4">
+                        <p id="transactionRecordCount" class="text-sm text-gray-600"></p>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full">
+                            <thead class="bg-gray-50 border-b">
+                                <tr>
+                                    <th class="px-3 py-3 text-left text-xs font-bold text-gray-700">No</th>
+                                    <th class="px-3 py-3 text-left text-xs font-bold text-gray-700">Tanggal</th>
+                                    <th class="px-3 py-3 text-left text-xs font-bold text-gray-700">Tipe</th>
+                                    <th class="px-3 py-3 text-left text-xs font-bold text-gray-700">Kategori</th>
+                                    <th class="px-3 py-3 text-left text-xs font-bold text-gray-700">Akun</th>
+                                    <th class="px-3 py-3 text-right text-xs font-bold text-gray-700">Nominal</th>
+                                    <th class="px-3 py-3 text-left text-xs font-bold text-gray-700">Keterangan</th>
+                                </tr>
+                            </thead>
+                            <tbody id="transactionsTableBody"></tbody>
+                        </table>
+                    </div>
+                    <div id="transactionPagination"></div>
+                </div>
             </div>
-
+            
+            <!-- ALLOCATIONS PAGE -->
             <div id="page-allocations" class="page-content">
-                <h2 class="text-2xl font-bold text-gray-900 mb-6">Jatah</h2>
-                <p class="text-gray-600">Coming soon...</p>
+                <div id="allocationMonthSelector" class="mb-6"></div>
+                <div id="allocationSummary"></div>
+                <div id="allocationsList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
             </div>
-
+            
+            <!-- DEBTS PAGE -->
             <div id="page-debts" class="page-content">
-                <h2 class="text-2xl font-bold text-gray-900 mb-6">Utang & Piutang</h2>
-                <p class="text-gray-600">Coming soon...</p>
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-2xl font-bold text-gray-900">💰 Utang & Piutang</h2>
+                    <button onclick="showAddDebtModal()" class="btn btn-primary">➕ Tambah</button>
+                </div>
+                
+                <div id="debtSummary" class="mb-6"></div>
+                
+                <div class="flex space-x-2 mb-6">
+                    <button onclick="filterDebts('all')" data-filter="all" class="btn bg-green-600 text-white text-sm">Semua</button>
+                    <button onclick="filterDebts('utang')" data-filter="utang" class="btn bg-gray-100 text-gray-700 text-sm">💸 Utang</button>
+                    <button onclick="filterDebts('piutang')" data-filter="piutang" class="btn bg-gray-100 text-gray-700 text-sm">💰 Piutang</button>
+                </div>
+                
+                <div id="debtsList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
             </div>
-
+            
+            <!-- REPORTS PAGE -->
             <div id="page-reports" class="page-content">
-                <h2 class="text-2xl font-bold text-gray-900 mb-6">Laporan</h2>
-                <p class="text-gray-600">Coming soon...</p>
+                <h2 class="text-2xl font-bold text-gray-900 mb-6">📊 Laporan</h2>
+                
+                <div class="card mb-6">
+                    <div class="flex items-center justify-between gap-4">
+                        <div class="flex-1">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Pilih Bulan</label>
+                            <input type="month" id="reportBulan" onchange="generateMonthlyReport()" class="input">
+                        </div>
+                        <div class="flex space-x-2">
+                            <button onclick="exportReportPDF()" class="btn btn-danger text-sm">📥 PDF</button>
+                            <button onclick="sendReportWhatsApp()" class="btn btn-primary text-sm">📱 WA</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="reportSummary" class="mb-6"></div>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                    <div class="card">
+                        <h3 class="text-lg font-bold mb-4">📈 Top 5 Pengeluaran</h3>
+                        <div id="reportTopExpenses"></div>
+                    </div>
+                    <div class="card">
+                        <h3 class="text-lg font-bold mb-4">📊 Grafik</h3>
+                        <div class="chart-container">
+                            <canvas id="reportChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h3 class="text-lg font-bold mb-4">💡 Rekomendasi</h3>
+                    <div id="reportRecommendation"></div>
+                </div>
             </div>
-
+            
+            <!-- SETTINGS PAGE -->
             <div id="page-settings" class="page-content">
-                <h2 class="text-2xl font-bold text-gray-900 mb-6">Pengaturan</h2>
-                <p class="text-gray-600">Coming soon...</p>
+                <h2 class="text-2xl font-bold text-gray-900 mb-6">⚙️ Pengaturan</h2>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div class="card">
+                        <h3 class="text-lg font-bold mb-4">📱 WhatsApp</h3>
+                        <div class="space-y-4">
+                            <button onclick="testWhatsAppConnection()" class="w-full btn btn-primary">🧪 Test Koneksi</button>
+                            <button onclick="sendManualWhatsApp('daily')" class="w-full btn btn-secondary">📊 Kirim Harian</button>
+                            <button onclick="sendManualWhatsApp('weekly')" class="w-full btn btn-secondary">📈 Kirim Mingguan</button>
+                            <button onclick="sendManualWhatsApp('balance')" class="w-full btn btn-secondary">💰 Kirim Saldo</button>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <h3 class="text-lg font-bold mb-4">💾 Data</h3>
+                        <div class="space-y-4">
+                            <button onclick="refreshData()" class="w-full btn btn-primary">🔄 Refresh Data</button>
+                            <button onclick="clearCache()" class="w-full btn btn-secondary">🗑️ Hapus Cache</button>
+                            <div class="bg-gray-50 rounded-lg p-4">
+                                <p class="text-sm text-gray-600">Last Update:</p>
+                                <p id="lastUpdateTime" class="text-xs text-gray-500 mt-1">-</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </main>
@@ -359,38 +334,40 @@
     <nav class="fixed bottom-0 inset-x-0 bg-white border-t border-gray-200 lg:hidden z-40">
         <div class="grid grid-cols-5 h-16">
             <button onclick="switchPage('dashboard')" class="bottom-nav-btn active" data-page="dashboard">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
-            </svg>
-            <span>Home</span>
-        </button>
-        
-        <button onclick="switchPage('transactions')" class="bottom-nav-btn" data-page="transactions">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
-            </svg>
-            <span>Transaksi</span>
-        </button>
-        
-        <button onclick="showAddTransactionModal()" class="bottom-nav-btn-fab">
-            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-            </svg>
-        </button>
-        
-        <button onclick="switchPage('allocations')" class="bottom-nav-btn" data-page="allocations">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
-            </svg>
-            <span>Jatah</span>
-        </button>
-        
-        <button onclick="switchPage('reports')" class="bottom-nav-btn" data-page="reports">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-            </svg>
-            <span>Laporan</span>
-        </button>
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+                </svg>
+                <span class="text-xs mt-1">Home</span>
+            </button>
+            
+            <button onclick="switchPage('transactions')" class="bottom-nav-btn" data-page="transactions">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                </svg>
+                <span class="text-xs mt-1">Transaksi</span>
+            </button>
+            
+            <button onclick="showAddTransactionModal()" class="bottom-nav-btn">
+                <div class="w-12 h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-full flex items-center justify-center -mt-6 shadow-lg">
+                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                    </svg>
+                </div>
+            </button>
+            
+            <button onclick="switchPage('allocations')" class="bottom-nav-btn" data-page="allocations">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                </svg>
+                <span class="text-xs mt-1">Jatah</span>
+            </button>
+            
+            <button onclick="switchPage('reports')" class="bottom-nav-btn" data-page="reports">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+                <span class="text-xs mt-1">Laporan</span>
+            </button>
         </div>
     </nav>
 
@@ -415,22 +392,67 @@
     <script src="dashboard.js"></script>
     <script src="charts.js"></script>
     
+    <!-- NEW SCRIPTS - Add additional functionality -->
+    <script src="transactions.js"></script>
+    <script src="allocations.js"></script>
+    <script src="debts.js"></script>
+    <script src="reports.js"></script>
+    <script src="whatsapp.js"></script>
+    
     <script>
         // Initialize app on load
         document.addEventListener('DOMContentLoaded', () => {
             console.log('🚀 Dompet Ku initializing...');
             initApp();
         });
-    </script>
-    <script src="transactions.js"></script>
-    <script src="allocations.js"></script>
-    <script src="debts.js"></script>
-    <script src="reports.js"></script>
-    <script src="whatsapp.js"></script>
-    <script>
+        
         // Clear cache helper
         function clearCache() {
             if (confirm('Hapus semua cache? Data akan di-reload dari Google Sheets.')) {
+                localStorage.clear();
+                location.reload();
+            }
+        }
+        
+        // Placeholder functions for new features (to prevent console errors)
+        // These should be implemented in their respective JS files
+        
+        function showAddDebtModal() {
+            console.log('showAddDebtModal called - implement in debts.js');
+            alert('Fitur ini akan segera tersedia! Pastikan file debts.js sudah ada.');
+        }
+        
+        function filterDebts(type) {
+            console.log('filterDebts called:', type, '- implement in debts.js');
+        }
+        
+        function generateMonthlyReport() {
+            console.log('generateMonthlyReport called - implement in reports.js');
+        }
+        
+        function exportReportPDF() {
+            console.log('exportReportPDF called - implement in reports.js');
+            alert('Fitur export PDF akan segera tersedia!');
+        }
+        
+        function sendReportWhatsApp() {
+            console.log('sendReportWhatsApp called - implement in whatsapp.js');
+            alert('Fitur kirim WhatsApp akan segera tersedia!');
+        }
+        
+        function testWhatsAppConnection() {
+            console.log('testWhatsAppConnection called - implement in whatsapp.js');
+            alert('Test koneksi WhatsApp - fitur akan segera tersedia!');
+        }
+        
+        function sendManualWhatsApp(type) {
+            console.log('sendManualWhatsApp called:', type, '- implement in whatsapp.js');
+            alert('Fitur kirim WhatsApp ' + type + ' akan segera tersedia!');
+        }
+        
+        function refreshData() {
+            console.log('refreshData called');
+            if (confirm('Reload semua data dari Google Sheets?')) {
                 localStorage.clear();
                 location.reload();
             }

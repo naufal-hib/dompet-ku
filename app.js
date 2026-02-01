@@ -389,8 +389,148 @@ function showAddTransactionModal() {
 }
 
 function showAddAccountModal() {
-    showAlert('Fitur tambah akun akan segera hadir!', 'info');
-    // TODO: Implement modal
+    const modal = document.getElementById('addAccountModal');
+    if (!modal) {
+        createAddAccountModal();
+        return;
+    }
+    
+    document.getElementById('addAccountForm').reset();
+    modal.classList.add('active');
+}
+
+function closeAddAccountModal() {
+    const modal = document.getElementById('addAccountModal');
+    if (modal) modal.classList.remove('active');
+}
+
+// ============================================
+// CREATE ADD ACCOUNT MODAL
+// ============================================
+function createAddAccountModal() {
+    const modalHTML = `
+        <div id="addAccountModal" class="modal">
+            <div class="modal-content">
+                <div class="p-6">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="text-2xl font-bold text-gray-900">Tambah Akun Baru</h3>
+                        <button onclick="closeAddAccountModal()" class="text-gray-400 hover:text-gray-600">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                            </svg>
+                        </button>
+                    </div>
+                    
+                    <form id="addAccountForm" onsubmit="submitAccount(event)">
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Nama Akun</label>
+                                <input type="text" id="accountNama" required class="input" 
+                                       placeholder="Contoh: BCA Tabungan, Cash Dompet, OVO">
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Tipe Akun</label>
+                                <select id="accountTipe" required class="input">
+                                    <option value="">Pilih Tipe</option>
+                                    <option value="Bank">🏦 Bank</option>
+                                    <option value="Cash">💵 Cash</option>
+                                    <option value="E-wallet">📱 E-wallet</option>
+                                </select>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Saldo Awal</label>
+                                <div class="relative">
+                                    <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">Rp</span>
+                                    <input type="number" id="accountSaldo" required min="0" step="1000" 
+                                           class="input pl-12" placeholder="0">
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Warna</label>
+                                <div class="grid grid-cols-6 gap-2">
+                                    ${['#10B981', '#3B82F6', '#8B5CF6', '#F59E0B', '#EF4444', '#EC4899'].map(color => `
+                                        <button type="button" onclick="selectAccountColor('${color}')" 
+                                                class="w-full h-10 rounded-lg border-2 border-gray-200 hover:border-gray-400 transition-colors"
+                                                style="background-color: ${color};"
+                                                data-color="${color}">
+                                        </button>
+                                    `).join('')}
+                                </div>
+                                <input type="hidden" id="accountWarna" value="#10B981">
+                            </div>
+                        </div>
+                        
+                        <div class="flex space-x-3 mt-6">
+                            <button type="button" onclick="closeAddAccountModal()" class="flex-1 btn btn-secondary">
+                                Batal
+                            </button>
+                            <button type="submit" class="flex-1 btn btn-primary">
+                                💾 Simpan
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    document.body.insertAdjacentHTML('beforeend', modalHTML);
+    document.getElementById('addAccountModal').classList.add('active');
+}
+
+function selectAccountColor(color) {
+    document.getElementById('accountWarna').value = color;
+    
+    // Update visual selection
+    document.querySelectorAll('[data-color]').forEach(btn => {
+        btn.classList.remove('ring-4', 'ring-offset-2');
+        btn.classList.add('border-2', 'border-gray-200');
+    });
+    
+    const selectedBtn = document.querySelector(`[data-color="${color}"]`);
+    if (selectedBtn) {
+        selectedBtn.classList.remove('border-2', 'border-gray-200');
+        selectedBtn.classList.add('ring-4', 'ring-offset-2');
+        selectedBtn.style.setProperty('--tw-ring-color', color);
+    }
+}
+
+// ============================================
+// SUBMIT ACCOUNT
+// ============================================
+async function submitAccount(event) {
+    event.preventDefault();
+    
+    const data = {
+        nama: document.getElementById('accountNama').value,
+        tipe: document.getElementById('accountTipe').value,
+        saldoAwal: parseFloat(document.getElementById('accountSaldo').value),
+        warna: document.getElementById('accountWarna').value
+    };
+    
+    showLoading();
+    
+    try {
+        const result = await callAppsScript('addAccount', data);
+        
+        if (result.success) {
+            await loadAllData();
+            initDashboard();
+            closeAddAccountModal();
+            hideLoading();
+            showAlert('✅ Akun berhasil ditambahkan!', 'success');
+        } else {
+            hideLoading();
+            showAlert('❌ Gagal: ' + result.message, 'error');
+        }
+    } catch (error) {
+        console.error('Submit account error:', error);
+        hideLoading();
+        showAlert('❌ Terjadi kesalahan. Silakan coba lagi.', 'error');
+    }
 }
 
 // ============================================

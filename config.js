@@ -3,11 +3,11 @@
 // ============================================
 
 // Google Sheets Configuration
-const SPREADSHEET_ID = '1EFAvKsfmDZtQMIGgSxlmKRlxU752_brCmzZUX3HJdoM'; // GANTI DENGAN ID SPREADSHEET ANDA!
-const API_KEY = 'AIzaSyBYxMfJkJSaaKLXcjd2y-0RYBNdFetfz_I'; // GANTI DENGAN API KEY ANDA!
+const SPREADSHEET_ID = '1EFAvKsfmDZtQMIGgSxlmKRlxU752_brCmzZUX3HJdoM';
+const API_KEY = 'AIzaSyBYxMfJkJSaaKLXcjd2y-0RYBNdFetfz_I';
 
 // Google Apps Script Web App URL
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxJdKMW6ttLBILdavjsEcocJzpBdoxvq1kml59XX1z9vZGrxTYZ3pLqtc1ia3N_xCo5/exec'; // GANTI DENGAN URL ANDA!
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxJdKMW6ttLBILdavjsEcocJzpBdoxvq1kml59XX1z9vZGrxTYZ3pLqtc1ia3N_xCo5/exec';
 
 // Sheet Names
 const SHEET_NAMES = {
@@ -21,10 +21,10 @@ const SHEET_NAMES = {
     allocations: 'Allocations'
 };
 
-// WhatsApp Configuration (Optional - for manual trigger)
+// WhatsApp Configuration
 const WA_CONFIG = {
     enabled: true,
-    number: '62895397978257' // GANTI DENGAN NOMOR ANDA!
+    number: '62895397978257'
 };
 
 // API Base URLs
@@ -36,26 +36,42 @@ function getSheetUrl(sheetName, range = '') {
     return `${SHEETS_API_BASE}/values/${fullRange}?key=${API_KEY}`;
 }
 
-// Helper function to call Apps Script
+// ============================================
+// Call Apps Script - MENGGUNAKAN GET REQUEST
+// ============================================
 async function callAppsScript(action, data) {
     try {
-        const response = await fetch(APPS_SCRIPT_URL, {
-            method: 'POST',
-            mode: 'cors',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                action: action,
-                ...data
-            })
+        console.log('📤 Calling Apps Script:', action, data);
+        
+        // Encode data sebagai query parameter
+        const params = new URLSearchParams({
+            action: action,
+            payload: JSON.stringify(data)
         });
         
+        const url = `${APPS_SCRIPT_URL}?${params.toString()}`;
+        
+        console.log('🔗 Request URL:', url);
+        
+        // Gunakan GET request (no CORS preflight!)
+        const response = await fetch(url, {
+            method: 'GET',
+            redirect: 'follow'
+        });
+        
+        console.log('📥 Response status:', response.status);
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
         const result = await response.json();
+        console.log('✅ Apps Script result:', result);
+        
         return result;
         
     } catch (error) {
-        console.error('Apps Script error:', error);
+        console.error('❌ Apps Script error:', error);
         throw error;
     }
 }

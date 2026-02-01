@@ -9,7 +9,10 @@ function initReportsPage() {
     console.log('📊 Initializing reports page...');
     
     // Set default to current month
-    document.getElementById('reportBulan').value = currentMonth;
+    const reportBulanInput = document.getElementById('reportBulan');
+    if (reportBulanInput) {
+        reportBulanInput.value = currentMonth; // currentMonth format: YYYY-MM
+    }
     
     // Generate report
     generateMonthlyReport();

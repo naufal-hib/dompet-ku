@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dompet Ku - Personal Finance Manager</title>
+    <title>💰 Dompet Ku - Pengelola Keuangan Pribadi</title>
+    <meta name="description" content="Aplikasi pengelola keuangan pribadi yang simple dan mudah digunakan">
+    <meta name="theme-color" content="#10B981">
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -11,65 +13,76 @@
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     
-    <!-- jsPDF for PDF export -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.0/jspdf.plugin.autotable.min.js"></script>
-    
     <!-- Custom Styles -->
     <link rel="stylesheet" href="styles.css">
+    
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💰</text></svg>">
 </head>
 <body class="bg-gray-50">
     
-    <!-- DESKTOP SIDEBAR -->
-    <aside class="sidebar">
-        <div class="p-6">
-            <div class="flex items-center space-x-3 mb-8">
-                <div class="w-12 h-12 bg-gradient-to-br from-green-400 to-green-600 rounded-xl flex items-center justify-center">
-                    <span class="text-2xl">💰</span>
-                </div>
-                <div>
-                    <h1 class="text-xl font-bold text-gray-900">Dompet Ku</h1>
-                    <p class="text-xs text-gray-500">Finance Manager</p>
-                </div>
+    <!-- Mobile Header -->
+    <header class="sticky top-0 z-40 bg-white border-b border-gray-200 lg:hidden">
+        <div class="px-4 py-3 flex items-center justify-between">
+            <div class="flex items-center space-x-2">
+                <span class="text-2xl">💰</span>
+                <h1 class="text-lg font-bold text-gray-900">Dompet Ku</h1>
+            </div>
+            <button onclick="toggleMobileMenu()" class="p-2 rounded-lg hover:bg-gray-100">
+                <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                </svg>
+            </button>
+        </div>
+    </header>
+
+    <!-- Desktop Sidebar -->
+    <aside class="hidden lg:fixed lg:inset-y-0 lg:flex lg:w-64 lg:flex-col bg-white border-r border-gray-200">
+        <div class="flex-1 flex flex-col min-h-0">
+            <!-- Logo -->
+            <div class="flex items-center h-16 px-6 border-b border-gray-200">
+                <span class="text-3xl">💰</span>
+                <h1 class="ml-2 text-xl font-bold text-gray-900">Dompet Ku</h1>
             </div>
             
-            <nav class="space-y-2">
-                <a href="#" onclick="switchPage('dashboard'); return false;" class="nav-link active" data-page="dashboard">
+            <!-- Navigation -->
+            <nav class="flex-1 px-4 py-4 space-y-1">
+                <a href="#" onclick="switchPage('dashboard')" class="nav-link active" data-page="dashboard">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
                     </svg>
                     <span>Dashboard</span>
                 </a>
                 
-                <a href="#" onclick="switchPage('transactions'); return false;" class="nav-link" data-page="transactions">
+                <a href="#" onclick="switchPage('transactions')" class="nav-link" data-page="transactions">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
                     </svg>
                     <span>Transaksi</span>
                 </a>
                 
-                <a href="#" onclick="switchPage('allocations'); return false;" class="nav-link" data-page="allocations">
+                <a href="#" onclick="switchPage('allocations')" class="nav-link" data-page="allocations">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
                     </svg>
                     <span>Jatah</span>
                 </a>
                 
-                <a href="#" onclick="switchPage('debts'); return false;" class="nav-link" data-page="debts">
+                <a href="#" onclick="switchPage('debts')" class="nav-link" data-page="debts">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path>
                     </svg>
-                    <span>Utang/Piutang</span>
+                    <span>Utang & Piutang</span>
                 </a>
                 
-                <a href="#" onclick="switchPage('reports'); return false;" class="nav-link" data-page="reports">
+                <a href="#" onclick="switchPage('reports')" class="nav-link" data-page="reports">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                     </svg>
                     <span>Laporan</span>
                 </a>
                 
-                <a href="#" onclick="switchPage('settings'); return false;" class="nav-link" data-page="settings">
+                <a href="#" onclick="switchPage('settings')" class="nav-link" data-page="settings">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
@@ -77,355 +90,213 @@
                     <span>Pengaturan</span>
                 </a>
             </nav>
-        </div>
-        
-        <!-- Sidebar Footer -->
-        <div class="p-6 border-t border-gray-200">
-            <button onclick="refreshData()" class="w-full btn btn-secondary text-sm py-2">
-                🔄 Refresh Data
-            </button>
-        </div>
-    </aside>
-    
-    <!-- MOBILE HEADER -->
-    <header class="mobile-header">
-        <div class="flex items-center justify-between">
-            <div class="flex items-center space-x-3">
-                <button id="menuToggle" class="lg:hidden p-2 rounded-lg hover:bg-gray-100">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-                    </svg>
-                </button>
-                <div class="flex items-center space-x-2">
-                    <span class="text-2xl">💰</span>
-                    <h1 class="text-xl font-bold text-gray-900">Dompet Ku</h1>
+            
+            <!-- User Info -->
+            <div class="px-4 py-4 border-t border-gray-200">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <div class="w-10 h-10 rounded-full bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center text-white font-bold">
+                            U
+                        </div>
+                    </div>
+                    <div class="ml-3">
+                        <p class="text-sm font-medium text-gray-900">User</p>
+                        <p class="text-xs text-gray-500">Personal Finance</p>
+                    </div>
                 </div>
             </div>
-            <button onclick="refreshData()" class="p-2 rounded-lg hover:bg-gray-100">
-                <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
-                </svg>
-            </button>
         </div>
-    </header>
-    
-    <!-- MAIN CONTENT -->
-    <main class="main-content">
-        <div class="container">
+    </aside>
+
+    <!-- Main Content -->
+    <main class="lg:pl-64">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
             
-            <!-- DASHBOARD PAGE -->
-            <div id="page-dashboard" class="page active">
-                <div class="greeting-card">
-                    <div>
-                        <h2 class="text-2xl font-bold text-gray-900 mb-1" id="greetingText">Selamat Datang! 👋</h2>
-                        <p class="text-gray-600" id="currentDate"></p>
-                    </div>
+            <!-- Dashboard Page -->
+            <div id="page-dashboard" class="page-content active">
+                <!-- Greeting -->
+                <div class="mb-6">
+                    <h2 class="text-2xl sm:text-3xl font-bold text-gray-900">Halo! 👋</h2>
+                    <p class="text-sm sm:text-base text-gray-600 mt-1" id="currentDate"></p>
                 </div>
-                
+
                 <!-- Overview Cards -->
-                <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-                    <div class="card bg-gradient-to-br from-green-50 to-green-100 border border-green-200">
-                        <p class="text-xs font-medium text-green-700 mb-1">💰 Total Aset</p>
-                        <p id="totalAsset" class="text-xl lg:text-2xl font-bold text-green-600">Rp 0</p>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6">
+                    <!-- Total Aset -->
+                    <div class="card">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-sm font-medium text-gray-600">💰 Total Aset</span>
+                        </div>
+                        <p class="text-2xl sm:text-3xl font-bold text-gray-900" id="totalAset">Rp 0</p>
+                        <p class="text-xs sm:text-sm text-gray-500 mt-1" id="asetChange">Loading...</p>
                     </div>
-                    <div class="card bg-gradient-to-br from-blue-50 to-blue-100 border border-blue-200">
-                        <p class="text-xs font-medium text-blue-700 mb-1">📈 Pemasukan</p>
-                        <p id="totalIncome" class="text-xl lg:text-2xl font-bold text-blue-600">Rp 0</p>
+
+                    <!-- Pemasukan Bulan Ini -->
+                    <div class="card">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-sm font-medium text-gray-600">📈 Pemasukan</span>
+                        </div>
+                        <p class="text-2xl sm:text-3xl font-bold text-green-600" id="totalPemasukan">Rp 0</p>
+                        <p class="text-xs sm:text-sm text-gray-500 mt-1">Bulan ini</p>
                     </div>
-                    <div class="card bg-gradient-to-br from-red-50 to-red-100 border border-red-200">
-                        <p class="text-xs font-medium text-red-700 mb-1">📉 Pengeluaran</p>
-                        <p id="totalExpense" class="text-xl lg:text-2xl font-bold text-red-600">Rp 0</p>
+
+                    <!-- Pengeluaran Bulan Ini -->
+                    <div class="card">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-sm font-medium text-gray-600">📉 Pengeluaran</span>
+                        </div>
+                        <p class="text-2xl sm:text-3xl font-bold text-red-600" id="totalPengeluaran">Rp 0</p>
+                        <p class="text-xs sm:text-sm text-gray-500 mt-1">Bulan ini</p>
                     </div>
-                    <div class="card bg-gradient-to-br from-purple-50 to-purple-100 border border-purple-200">
-                        <p class="text-xs font-medium text-purple-700 mb-1">💵 Saldo</p>
-                        <p id="totalBalance" class="text-xl lg:text-2xl font-bold text-purple-600">Rp 0</p>
+
+                    <!-- Saldo Bulan Ini -->
+                    <div class="card">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-sm font-medium text-gray-600">💵 Saldo</span>
+                        </div>
+                        <p class="text-2xl sm:text-3xl font-bold text-blue-600" id="saldoBulanIni">Rp 0</p>
+                        <p class="text-xs sm:text-sm text-gray-500 mt-1">Pemasukan - Pengeluaran</p>
                     </div>
                 </div>
-                
-                <!-- Accounts & Chart -->
+
+                <!-- Akun & Chart -->
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-                    <!-- Accounts -->
+                    <!-- Akun Saya -->
                     <div class="card">
                         <div class="flex items-center justify-between mb-4">
-                            <h3 class="text-lg font-bold text-gray-900">💳 Akun</h3>
-                            <button onclick="showAddAccountModal()" class="text-green-600 hover:text-green-700 text-sm font-semibold">
+                            <h3 class="text-lg font-bold text-gray-900">Akun Saya</h3>
+                            <button onclick="showAddAccountModal()" class="text-green-600 hover:text-green-700 font-medium text-sm">
                                 + Tambah
                             </button>
                         </div>
-                        <div id="accountsList" class="space-y-3"></div>
+                        <div id="accountsList" class="space-y-3">
+                            <!-- Will be populated by JavaScript -->
+                            <div class="text-center py-8 text-gray-500">
+                                <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600 mx-auto mb-2"></div>
+                                <p class="text-sm">Memuat data...</p>
+                            </div>
+                        </div>
                     </div>
-                    
-                    <!-- Expense Chart -->
+
+                    <!-- Chart Pengeluaran -->
                     <div class="card">
-                        <h3 class="text-lg font-bold text-gray-900 mb-4">📊 Pengeluaran Bulan Ini</h3>
-                        <div class="chart-container">
+                        <h3 class="text-lg font-bold text-gray-900 mb-4">Pengeluaran per Kategori</h3>
+                        <div class="relative" style="height: 250px;">
                             <canvas id="expenseChart"></canvas>
                         </div>
                     </div>
                 </div>
-                
-                <!-- Recent Transactions -->
+
+                <!-- Transaksi Terbaru -->
                 <div class="card">
                     <div class="flex items-center justify-between mb-4">
-                        <h3 class="text-lg font-bold text-gray-900">📝 Transaksi Terbaru</h3>
-                        <button onclick="switchPage('transactions')" class="text-green-600 hover:text-green-700 text-sm font-semibold">
+                        <h3 class="text-lg font-bold text-gray-900">Transaksi Terbaru</h3>
+                        <button onclick="switchPage('transactions')" class="text-green-600 hover:text-green-700 font-medium text-sm">
                             Lihat Semua →
                         </button>
                     </div>
-                    <div id="recentTransactions"></div>
-                </div>
-            </div>
-            
-            <!-- TRANSACTIONS PAGE -->
-            <div id="page-transactions" class="page">
-                <h2 class="text-2xl font-bold text-gray-900 mb-6">📋 Transaksi</h2>
-                
-                <!-- Filters -->
-                <div class="card mb-6">
-                    <h3 class="text-lg font-bold text-gray-900 mb-4">🔍 Filter</h3>
-                    <div id="transactionFilters"></div>
-                </div>
-                
-                <!-- Summary -->
-                <div id="transactionSummary" class="mb-6"></div>
-                
-                <!-- Table -->
-                <div class="card">
-                    <div class="flex items-center justify-between mb-4">
-                        <p id="transactionRecordCount" class="text-sm text-gray-600"></p>
-                    </div>
-                    <div class="overflow-x-auto">
-                        <table class="w-full">
-                            <thead class="bg-gray-50 border-b border-gray-200">
-                                <tr>
-                                    <th class="px-3 py-3 text-left text-xs font-bold text-gray-700">No</th>
-                                    <th class="px-3 py-3 text-left text-xs font-bold text-gray-700">Tanggal</th>
-                                    <th class="px-3 py-3 text-left text-xs font-bold text-gray-700">Tipe</th>
-                                    <th class="px-3 py-3 text-left text-xs font-bold text-gray-700">Kategori</th>
-                                    <th class="px-3 py-3 text-left text-xs font-bold text-gray-700">Akun</th>
-                                    <th class="px-3 py-3 text-right text-xs font-bold text-gray-700">Nominal</th>
-                                    <th class="px-3 py-3 text-left text-xs font-bold text-gray-700">Keterangan</th>
-                                </tr>
-                            </thead>
-                            <tbody id="transactionsTableBody"></tbody>
-                        </table>
-                    </div>
-                    <div id="transactionPagination"></div>
-                </div>
-            </div>
-            
-            <!-- ALLOCATIONS PAGE -->
-            <div id="page-allocations" class="page">
-                <div id="allocationMonthSelector" class="mb-6"></div>
-                <div id="allocationSummary"></div>
-                <div id="allocationsList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
-            </div>
-            
-            <!-- DEBTS PAGE -->
-            <div id="page-debts" class="page">
-                <div class="flex items-center justify-between mb-6">
-                    <h2 class="text-2xl font-bold text-gray-900">💰 Utang & Piutang</h2>
-                    <button onclick="showAddDebtModal()" class="btn btn-primary">
-                        ➕ Tambah Baru
-                    </button>
-                </div>
-                
-                <div id="debtSummary" class="mb-6"></div>
-                
-                <!-- Filter Buttons -->
-                <div class="flex space-x-2 mb-6">
-                    <button onclick="filterDebts('all')" data-filter="all" class="btn bg-green-600 text-white text-sm">
-                        Semua
-                    </button>
-                    <button onclick="filterDebts('utang')" data-filter="utang" class="btn bg-gray-100 text-gray-700 text-sm">
-                        💸 Utang
-                    </button>
-                    <button onclick="filterDebts('piutang')" data-filter="piutang" class="btn bg-gray-100 text-gray-700 text-sm">
-                        💰 Piutang
-                    </button>
-                </div>
-                
-                <div id="debtsList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
-            </div>
-            
-            <!-- REPORTS PAGE -->
-            <div id="page-reports" class="page">
-                <h2 class="text-2xl font-bold text-gray-900 mb-6">📊 Laporan Keuangan</h2>
-                
-                <!-- Month Selector -->
-                <div class="card mb-6">
-                    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                        <div class="flex-1">
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Pilih Bulan</label>
-                            <input type="month" id="reportBulan" onchange="generateMonthlyReport()" class="input">
-                        </div>
-                        <div class="flex space-x-2">
-                            <button onclick="exportReportPDF()" class="btn btn-danger text-sm">
-                                📥 Download PDF
-                            </button>
-                            <button onclick="sendReportWhatsApp()" class="btn btn-primary text-sm">
-                                📱 Kirim WhatsApp
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Summary -->
-                <div id="reportSummary" class="mb-6"></div>
-                
-                <!-- Top Expenses & Chart -->
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-                    <div class="card">
-                        <h3 class="text-lg font-bold text-gray-900 mb-4">📈 Top 5 Pengeluaran</h3>
-                        <div id="reportTopExpenses"></div>
-                    </div>
-                    
-                    <div class="card">
-                        <h3 class="text-lg font-bold text-gray-900 mb-4">📊 Grafik Pengeluaran</h3>
-                        <div class="chart-container">
-                            <canvas id="reportChart"></canvas>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Recommendations -->
-                <div class="card">
-                    <h3 class="text-lg font-bold text-gray-900 mb-4">💡 Rekomendasi</h3>
-                    <div id="reportRecommendation"></div>
-                </div>
-            </div>
-            
-            <!-- SETTINGS PAGE -->
-            <div id="page-settings" class="page">
-                <h2 class="text-2xl font-bold text-gray-900 mb-6">⚙️ Pengaturan</h2>
-                
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    <!-- WhatsApp Settings -->
-                    <div class="card">
-                        <h3 class="text-lg font-bold text-gray-900 mb-4">📱 WhatsApp</h3>
-                        <div class="space-y-4">
-                            <button onclick="testWhatsAppConnection()" class="w-full btn btn-primary">
-                                🧪 Test Koneksi
-                            </button>
-                            <button onclick="sendManualWhatsApp('daily')" class="w-full btn btn-secondary">
-                                📊 Kirim Ringkasan Harian
-                            </button>
-                            <button onclick="sendManualWhatsApp('weekly')" class="w-full btn btn-secondary">
-                                📈 Kirim Ringkasan Mingguan
-                            </button>
-                            <button onclick="sendManualWhatsApp('balance')" class="w-full btn btn-secondary">
-                                💰 Kirim Saldo Akun
-                            </button>
-                        </div>
-                    </div>
-                    
-                    <!-- Data Management -->
-                    <div class="card">
-                        <h3 class="text-lg font-bold text-gray-900 mb-4">💾 Data</h3>
-                        <div class="space-y-4">
-                            <button onclick="refreshData()" class="w-full btn btn-primary">
-                                🔄 Refresh Data dari Google Sheets
-                            </button>
-                            <button onclick="clearCache()" class="w-full btn btn-secondary">
-                                🗑️ Hapus Cache
-                            </button>
-                            <div class="bg-gray-50 rounded-lg p-4">
-                                <p class="text-sm text-gray-600">Last Update:</p>
-                                <p id="lastUpdateTime" class="text-xs text-gray-500 mt-1">-</p>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- About -->
-                    <div class="card">
-                        <h3 class="text-lg font-bold text-gray-900 mb-4">ℹ️ Tentang</h3>
-                        <div class="space-y-2 text-sm text-gray-600">
-                            <p><strong>Dompet Ku</strong> v1.0.0</p>
-                            <p>Personal Finance Manager</p>
-                            <p>Powered by Google Sheets & Apps Script</p>
-                            <p class="pt-2 border-t border-gray-200">© 2025 - MIT License</p>
-                        </div>
+                    <div id="recentTransactions" class="space-y-3">
+                        <!-- Will be populated by JavaScript -->
                     </div>
                 </div>
             </div>
-            
+
+            <!-- Other Pages (Transactions, Allocations, etc.) -->
+            <div id="page-transactions" class="page-content">
+                <h2 class="text-2xl font-bold text-gray-900 mb-6">Transaksi</h2>
+                <p class="text-gray-600">Coming soon...</p>
+            </div>
+
+            <div id="page-allocations" class="page-content">
+                <h2 class="text-2xl font-bold text-gray-900 mb-6">Jatah</h2>
+                <p class="text-gray-600">Coming soon...</p>
+            </div>
+
+            <div id="page-debts" class="page-content">
+                <h2 class="text-2xl font-bold text-gray-900 mb-6">Utang & Piutang</h2>
+                <p class="text-gray-600">Coming soon...</p>
+            </div>
+
+            <div id="page-reports" class="page-content">
+                <h2 class="text-2xl font-bold text-gray-900 mb-6">Laporan</h2>
+                <p class="text-gray-600">Coming soon...</p>
+            </div>
+
+            <div id="page-settings" class="page-content">
+                <h2 class="text-2xl font-bold text-gray-900 mb-6">Pengaturan</h2>
+                <p class="text-gray-600">Coming soon...</p>
+            </div>
         </div>
     </main>
-    
-    <!-- MOBILE BOTTOM NAVIGATION -->
-    <nav class="bottom-nav">
-        <button onclick="switchPage('dashboard')" class="bottom-nav-btn active" data-page="dashboard">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
-            </svg>
-            <span>Home</span>
-        </button>
-        
-        <button onclick="switchPage('transactions')" class="bottom-nav-btn" data-page="transactions">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
-            </svg>
-            <span>Transaksi</span>
-        </button>
-        
-        <button onclick="showAddTransactionModal()" class="bottom-nav-btn-fab">
-            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-            </svg>
-        </button>
-        
-        <button onclick="switchPage('allocations')" class="bottom-nav-btn" data-page="allocations">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
-            </svg>
-            <span>Jatah</span>
-        </button>
-        
-        <button onclick="switchPage('reports')" class="bottom-nav-btn" data-page="reports">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-            </svg>
-            <span>Laporan</span>
-        </button>
+
+    <!-- Bottom Navigation (Mobile) -->
+    <nav class="fixed bottom-0 inset-x-0 bg-white border-t border-gray-200 lg:hidden z-40">
+        <div class="grid grid-cols-5 h-16">
+            <button onclick="switchPage('dashboard')" class="bottom-nav-btn active" data-page="dashboard">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+                </svg>
+                <span class="text-xs mt-1">Home</span>
+            </button>
+            
+            <button onclick="switchPage('transactions')" class="bottom-nav-btn" data-page="transactions">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                </svg>
+                <span class="text-xs mt-1">Transaksi</span>
+            </button>
+            
+            <button onclick="showAddTransactionModal()" class="bottom-nav-btn">
+                <div class="w-12 h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-full flex items-center justify-center -mt-6 shadow-lg">
+                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                    </svg>
+                </div>
+            </button>
+            
+            <button onclick="switchPage('allocations')" class="bottom-nav-btn" data-page="allocations">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                </svg>
+                <span class="text-xs mt-1">Jatah</span>
+            </button>
+            
+            <button onclick="switchPage('reports')" class="bottom-nav-btn" data-page="reports">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+                <span class="text-xs mt-1">Laporan</span>
+            </button>
+        </div>
     </nav>
-    
-    <!-- DESKTOP FAB -->
-    <button onclick="showAddTransactionModal()" class="fab">
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+
+    <!-- FAB (Desktop) -->
+    <button onclick="showAddTransactionModal()" class="hidden lg:flex fixed bottom-8 right-8 w-14 h-14 bg-gradient-to-br from-green-500 to-green-600 rounded-full items-center justify-center shadow-lg hover:shadow-xl transition-all hover:scale-110 z-30">
+        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
         </svg>
     </button>
-    
-    <!-- LOADING OVERLAY -->
-    <div id="loading" class="loading-overlay">
-        <div class="loading-spinner"></div>
-        <p class="text-white mt-4">Loading...</p>
+
+    <!-- Loading Overlay -->
+    <div id="loading" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="bg-white rounded-lg p-8 shadow-2xl">
+            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto"></div>
+            <p class="mt-4 text-gray-700 font-medium">Memuat data...</p>
+        </div>
     </div>
-    
-    <!-- Scripts -->
+
+    <!-- JavaScript -->
     <script src="config.js"></script>
     <script src="app.js"></script>
     <script src="dashboard.js"></script>
     <script src="charts.js"></script>
-    <script src="transactions.js"></script>
-    <script src="allocations.js"></script>
-    <script src="debts.js"></script>
-    <script src="reports.js"></script>
-    <script src="whatsapp.js"></script>
     
     <script>
         // Initialize app on load
-        window.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('🚀 Dompet Ku initializing...');
             initApp();
         });
-        
-        // Clear cache helper
-        function clearCache() {
-            if (confirm('Hapus semua cache? Data akan di-reload dari Google Sheets.')) {
-                localStorage.clear();
-                location.reload();
-            }
-        }
     </script>
 </body>
 </html>

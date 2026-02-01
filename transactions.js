@@ -457,7 +457,7 @@ function createAddTransactionModal() {
                     </div>
                     
                     <!-- Tabs -->
-                    <div class="flex space-x-2 mb-6 border-b border-gray-200">
+                    <div class="transaction-tabs-container">
                         <button onclick="switchTransactionTab('pemasukan')" 
                                 class="transaction-tab active" 
                                 data-tab="pemasukan">

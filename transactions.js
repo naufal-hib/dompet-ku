@@ -746,27 +746,50 @@ function exportTransactionsCSV() {
 const transactionTabStyle = document.createElement('style');
 transactionTabStyle.textContent = `
     .transaction-tab {
-        padding: 0.75rem 1.5rem;
+        flex: 1;
+        padding: 0.75rem 0.5rem;
         font-weight: 500;
         color: #6B7280;
-        border-bottom: 2px solid transparent;
+        border-bottom: 3px solid transparent;
         transition: all 0.2s;
         background: none;
         border: none;
         cursor: pointer;
         font-size: 0.875rem;
+        white-space: nowrap;
+        text-align: center;
+    }
+    
+    @media (max-width: 640px) {
+        .transaction-tab {
+            padding: 0.625rem 0.25rem;
+            font-size: 0.75rem;
+        }
     }
     
     .transaction-tab:hover {
         color: #111827;
         background-color: #F3F4F6;
-        border-radius: 0.5rem 0.5rem 0 0;
     }
     
     .transaction-tab.active {
         color: #059669;
         border-bottom-color: #059669;
-        font-weight: 600;
+        font-weight: 700;
+        background-color: #D1FAE5;
+    }
+    
+    /* Tab container */
+    .transaction-tabs-container {
+        display: flex;
+        border-bottom: 2px solid #E5E7EB;
+        margin-bottom: 1.5rem;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    .transaction-tabs-container::-webkit-scrollbar {
+        display: none;
     }
 `;
 document.head.appendChild(transactionTabStyle);

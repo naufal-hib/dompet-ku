@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>💰 Dompet Ku - Pengelola Keuangan Pribadi</title>
+    <meta name="description" content="Aplikasi pengelola keuangan pribadi yang simple dan mudah digunakan">
+    <meta name="theme-color" content="#10B981">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="styles.css">
+    
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💰</text></svg>">
+</head>
+<body class="bg-gray-50">
+    
+    <!-- Mobile Header -->
+    <header class="sticky top-0 z-40 bg-white border-b border-gray-200 lg:hidden">
+        <div class="px-4 py-3 flex items-center justify-between">
+            <div class="flex items-center space-x-2">
+                <span class="text-2xl">💰</span>
+                <h1 class="text-lg font-bold text-gray-900">Dompet Ku</h1>
+            </div>
+            <button onclick="toggleMobileMenu()" class="p-2 rounded-lg hover:bg-gray-100">
+                <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                </svg>
+            </button>
+        </div>
+    </header>
+
+    <!-- Desktop Sidebar -->
+    <aside class="hidden lg:fixed lg:inset-y-0 lg:flex lg:w-64 lg:flex-col bg-white border-r border-gray-200">
+        <div class="flex-1 flex flex-col min-h-0">
+            <!-- Logo -->
+            <div class="flex items-center h-16 px-6 border-b border-gray-200">
+                <span class="text-3xl">💰</span>
+                <h1 class="ml-2 text-xl font-bold text-gray-900">Dompet Ku</h1>
+            </div>
+            
+            <!-- Navigation -->
+            <nav class="flex-1 px-4 py-4 space-y-1">
+                <a href="#" onclick="switchPage('dashboard')" class="nav-link active" data-page="dashboard">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+                    </svg>
+                    <span>Dashboard</span>
+                </a>
+                
+                <a href="#" onclick="switchPage('transactions')" class="nav-link" data-page="transactions">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                    </svg>
+                    <span>Transaksi</span>
+                </a>
+                
+                <a href="#" onclick="switchPage('allocations')" class="nav-link" data-page="allocations">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                    </svg>
+                    <span>Jatah</span>
+                </a>
+                
+                <a href="#" onclick="switchPage('debts')" class="nav-link" data-page="debts">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                    </svg>
+                    <span>Utang & Piutang</span>
+                </a>
+                
+                <a href="#" onclick="switchPage('reports')" class="nav-link" data-page="reports">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                    <span>Laporan</span>
+                </a>
+                
+                <a href="#" onclick="switchPage('settings')" class="nav-link" data-page="settings">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                    </svg>
+                    <span>Pengaturan</span>
+                </a>
+            </nav>
+            
+            <!-- User Info -->
+            <div class="px-4 py-4 border-t border-gray-200">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <div class="w-10 h-10 rounded-full bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center text-white font-bold">
+                            U
+                        </div>
+                    </div>
+                    <div class="ml-3">
+                        <p class="text-sm font-medium text-gray-900">User</p>
+                        <p class="text-xs text-gray-500">Personal Finance</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="lg:pl-64">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+            
+            <!-- Dashboard Page -->
+            <div id="page-dashboard" class="page-content active">
+                <!-- Greeting -->
+                <div class="mb-6">
+                    <h2 class="text-2xl sm:text-3xl font-bold text-gray-900">Halo! 👋</h2>
+                    <p class="text-sm sm:text-base text-gray-600 mt-1" id="currentDate"></p>
+                </div>
+
+                <!-- Overview Cards -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6">
+                    <!-- Total Aset -->
+                    <div class="card">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-sm font-medium text-gray-600">💰 Total Aset</span>
+                        </div>
+                        <p class="text-2xl sm:text-3xl font-bold text-gray-900" id="totalAset">Rp 0</p>
+                        <p class="text-xs sm:text-sm text-gray-500 mt-1" id="asetChange">Loading...</p>
+                    </div>
+
+                    <!-- Pemasukan Bulan Ini -->
+                    <div class="card">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-sm font-medium text-gray-600">📈 Pemasukan</span>
+                        </div>
+                        <p class="text-2xl sm:text-3xl font-bold text-green-600" id="totalPemasukan">Rp 0</p>
+                        <p class="text-xs sm:text-sm text-gray-500 mt-1">Bulan ini</p>
+                    </div>
+
+                    <!-- Pengeluaran Bulan Ini -->
+                    <div class="card">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-sm font-medium text-gray-600">📉 Pengeluaran</span>
+                        </div>
+                        <p class="text-2xl sm:text-3xl font-bold text-red-600" id="totalPengeluaran">Rp 0</p>
+                        <p class="text-xs sm:text-sm text-gray-500 mt-1">Bulan ini</p>
+                    </div>
+
+                    <!-- Saldo Bulan Ini -->
+                    <div class="card">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-sm font-medium text-gray-600">💵 Saldo</span>
+                        </div>
+                        <p class="text-2xl sm:text-3xl font-bold text-blue-600" id="saldoBulanIni">Rp 0</p>
+                        <p class="text-xs sm:text-sm text-gray-500 mt-1">Pemasukan - Pengeluaran</p>
+                    </div>
+                </div>
+
+                <!-- Akun & Chart -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                    <!-- Akun Saya -->
+                    <div class="card">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-lg font-bold text-gray-900">Akun Saya</h3>
+                            <button onclick="showAddAccountModal()" class="text-green-600 hover:text-green-700 font-medium text-sm">
+                                + Tambah
+                            </button>
+                        </div>
+                        <div id="accountsList" class="space-y-3">
+                            <!-- Will be populated by JavaScript -->
+                            <div class="text-center py-8 text-gray-500">
+                                <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600 mx-auto mb-2"></div>
+                                <p class="text-sm">Memuat data...</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Chart Pengeluaran -->
+                    <div class="card">
+                        <h3 class="text-lg font-bold text-gray-900 mb-4">Pengeluaran per Kategori</h3>
+                        <div class="relative" style="height: 250px;">
+                            <canvas id="expenseChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Transaksi Terbaru -->
+                <div class="card">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-lg font-bold text-gray-900">Transaksi Terbaru</h3>
+                        <button onclick="switchPage('transactions')" class="text-green-600 hover:text-green-700 font-medium text-sm">
+                            Lihat Semua →
+                        </button>
+                    </div>
+                    <div id="recentTransactions" class="space-y-3">
+                        <!-- Will be populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Other Pages (Transactions, Allocations, etc.) -->
+            <div id="page-transactions" class="page-content">
+                <h2 class="text-2xl font-bold text-gray-900 mb-6">Transaksi</h2>
+                <p class="text-gray-600">Coming soon...</p>
+            </div>
+
+            <div id="page-allocations" class="page-content">
+                <h2 class="text-2xl font-bold text-gray-900 mb-6">Jatah</h2>
+                <p class="text-gray-600">Coming soon...</p>
+            </div>
+
+            <div id="page-debts" class="page-content">
+                <h2 class="text-2xl font-bold text-gray-900 mb-6">Utang & Piutang</h2>
+                <p class="text-gray-600">Coming soon...</p>
+            </div>
+
+            <div id="page-reports" class="page-content">
+                <h2 class="text-2xl font-bold text-gray-900 mb-6">Laporan</h2>
+                <p class="text-gray-600">Coming soon...</p>
+            </div>
+
+            <div id="page-settings" class="page-content">
+                <h2 class="text-2xl font-bold text-gray-900 mb-6">Pengaturan</h2>
+                <p class="text-gray-600">Coming soon...</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Bottom Navigation (Mobile) -->
+    <nav class="fixed bottom-0 inset-x-0 bg-white border-t border-gray-200 lg:hidden z-40">
+        <div class="grid grid-cols-5 h-16">
+            <button onclick="switchPage('dashboard')" class="bottom-nav-btn active" data-page="dashboard">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+                </svg>
+                <span class="text-xs mt-1">Home</span>
+            </button>
+            
+            <button onclick="switchPage('transactions')" class="bottom-nav-btn" data-page="transactions">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                </svg>
+                <span class="text-xs mt-1">Transaksi</span>
+            </button>
+            
+            <button onclick="showAddTransactionModal()" class="bottom-nav-btn">
+                <div class="w-12 h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-full flex items-center justify-center -mt-6 shadow-lg">
+                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                    </svg>
+                </div>
+            </button>
+            
+            <button onclick="switchPage('allocations')" class="bottom-nav-btn" data-page="allocations">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                </svg>
+                <span class="text-xs mt-1">Jatah</span>
+            </button>
+            
+            <button onclick="switchPage('reports')" class="bottom-nav-btn" data-page="reports">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+                <span class="text-xs mt-1">Laporan</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- FAB (Desktop) -->
+    <button onclick="showAddTransactionModal()" class="hidden lg:flex fixed bottom-8 right-8 w-14 h-14 bg-gradient-to-br from-green-500 to-green-600 rounded-full items-center justify-center shadow-lg hover:shadow-xl transition-all hover:scale-110 z-30">
+        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+        </svg>
+    </button>
+
+    <!-- Loading Overlay -->
+    <div id="loading" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="bg-white rounded-lg p-8 shadow-2xl">
+            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto"></div>
+            <p class="mt-4 text-gray-700 font-medium">Memuat data...</p>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="config.js"></script>
+    <script src="app.js"></script>
+    <script src="dashboard.js"></script>
+    <script src="charts.js"></script>
+    
+    <script>
+        // Initialize app on load
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('🚀 Dompet Ku initializing...');
+            initApp();
+        });
+    </script>
+</body>
+</html>

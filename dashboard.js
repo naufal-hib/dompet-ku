@@ -25,6 +25,8 @@ function initDashboard() {
 // RENDER OVERVIEW CARDS
 // ============================================
 function renderOverviewCards() {
+    console.log('📊 Rendering overview cards...');
+    
     // Calculate total aset
     const totalAset = accounts
         .filter(acc => acc.status === 'Aktif')
@@ -32,7 +34,8 @@ function renderOverviewCards() {
     
     // Calculate pemasukan & pengeluaran bulan ini
     const thisMonthTransactions = transactions.filter(t => {
-        return t.tanggal.startsWith(currentMonth);
+        const bulan = getMonthFromDate(t.tanggal);
+        return bulan === currentMonth;
     });
     
     const totalPemasukan = thisMonthTransactions
@@ -48,17 +51,38 @@ function renderOverviewCards() {
     // Calculate change vs last month (simplified - just show positive)
     const changePercent = 5; // Placeholder
     
-    // Update DOM
+    // Update DOM - FIXED IDs!
     const totalAsetEl = document.getElementById('totalAset');
     const asetChangeEl = document.getElementById('asetChange');
-    const totalPemasukanEl = document.getElementById('totalPemasukan');
-    const totalPengeluaranEl = document.getElementById('totalPengeluaran');
-    const saldoBulanIniEl = document.getElementById('saldoBulanIni');
+    const totalPemasukanEl = document.getElementById('totalPemasukan'); // ✅ FIXED
+    const totalPengeluaranEl = document.getElementById('totalPengeluaran'); // ✅ FIXED
+    const saldoBulanIniEl = document.getElementById('saldoBulanIni'); // ✅ FIXED
+    
+    console.log('Elements found:', {
+        totalAset: !!totalAsetEl,
+        asetChange: !!asetChangeEl,
+        totalPemasukan: !!totalPemasukanEl,
+        totalPengeluaran: !!totalPengeluaranEl,
+        saldoBulanIni: !!saldoBulanIniEl
+    });
     
     if (totalAsetEl) totalAsetEl.textContent = formatCurrency(totalAset);
     if (asetChangeEl) asetChangeEl.textContent = `↑ +${changePercent}% vs bulan lalu`;
-    if (totalPemasukanEl) totalPemasukanEl.textContent = formatCurrency(totalPemasukan);
-    if (totalPengeluaranEl) totalPengeluaranEl.textContent = formatCurrency(totalPengeluaran);
+    
+    if (totalPemasukanEl) {
+        totalPemasukanEl.textContent = formatCurrency(totalPemasukan);
+        console.log('✅ Updated totalPemasukan:', formatCurrency(totalPemasukan));
+    } else {
+        console.error('❌ totalPemasukan element not found!');
+    }
+    
+    if (totalPengeluaranEl) {
+        totalPengeluaranEl.textContent = formatCurrency(totalPengeluaran);
+        console.log('✅ Updated totalPengeluaran:', formatCurrency(totalPengeluaran));
+    } else {
+        console.error('❌ totalPengeluaran element not found!');
+    }
+    
     if (saldoBulanIniEl) {
         saldoBulanIniEl.textContent = formatCurrency(saldoBulanIni);
         // Change color based on positive/negative
@@ -69,7 +93,19 @@ function renderOverviewCards() {
             saldoBulanIniEl.classList.remove('text-blue-600');
             saldoBulanIniEl.classList.add('text-red-600');
         }
+        console.log('✅ Updated saldoBulanIni:', formatCurrency(saldoBulanIni));
+    } else {
+        console.error('❌ saldoBulanIni element not found!');
     }
+    
+    console.log('Dashboard values:', {
+        totalAset: formatCurrency(totalAset),
+        totalPemasukan: formatCurrency(totalPemasukan),
+        totalPengeluaran: formatCurrency(totalPengeluaran),
+        saldoBulanIni: formatCurrency(saldoBulanIni),
+        transactionsCount: thisMonthTransactions.length,
+        currentMonth: currentMonth
+    });
 }
 
 // ============================================

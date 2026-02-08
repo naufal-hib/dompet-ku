@@ -11,8 +11,60 @@ let allocations = [];
 let debts = [];
 let config = {};
 
-// Current month
+// Current month - ambil dari sistem atau config
 let currentMonth = new Date().toISOString().slice(0, 7); // Format: YYYY-MM
+
+// ============================================
+// DATE CONVERTER HELPER
+// ============================================
+function convertDateToISO(dateStr) {
+    // Convert DD/MM/YYYY → YYYY-MM-DD
+    if (typeof dateStr !== 'string') return '';
+    
+    if (dateStr.includes('/')) {
+        const parts = dateStr.split('/');
+        if (parts.length === 3) {
+            return `${parts[2]}-${parts[1]}-${parts[0]}`; // YYYY-MM-DD
+        }
+    }
+    return dateStr; // Already ISO format
+}
+
+function convertISOtoDisplay(dateStr) {
+    // Convert YYYY-MM-DD → DD/MM/YYYY (sesuai config)
+    if (typeof dateStr !== 'string') return '';
+    
+    const format = config.format_tanggal || 'DD/MM/YYYY';
+    
+    if (dateStr.includes('-') && dateStr.length === 10) {
+        const parts = dateStr.split('-');
+        if (parts.length === 3) {
+            if (format === 'DD/MM/YYYY') {
+                return `${parts[2]}/${parts[1]}/${parts[0]}`;
+            } else if (format === 'MM/DD/YYYY') {
+                return `${parts[1]}/${parts[2]}/${parts[0]}`;
+            }
+        }
+    }
+    return dateStr;
+}
+
+function getMonthFromDate(dateStr) {
+    // Extract YYYY-MM dari berbagai format
+    if (typeof dateStr !== 'string') return '';
+    
+    if (dateStr.includes('/')) {
+        const parts = dateStr.split('/');
+        if (parts.length === 3) {
+            // DD/MM/YYYY
+            return `${parts[2]}-${parts[1]}`; // YYYY-MM
+        }
+    } else if (dateStr.includes('-')) {
+        // YYYY-MM-DD
+        return dateStr.substring(0, 7);
+    }
+    return '';
+}
 
 // ============================================
 // INITIALIZE APP
@@ -37,6 +89,8 @@ async function initApp() {
         hideLoading();
         
         console.log('✅ App initialized successfully!');
+        console.log('Current Month:', currentMonth);
+        console.log('Config:', config);
         
     } catch (error) {
         console.error('❌ Initialization error:', error);
@@ -72,7 +126,7 @@ async function loadAllData() {
         allocations = processAllocations(allocationsData);
         debts = processDebts(debtsData);
         
-        // Update current month from config
+        // Update current month from config (jika ada)
         if (config.periode_aktif) {
             currentMonth = config.periode_aktif;
         }
@@ -83,7 +137,8 @@ async function loadAllData() {
             transactions: transactions.length,
             budgets: budgets.length,
             allocations: allocations.length,
-            debts: debts.length
+            debts: debts.length,
+            currentMonth: currentMonth
         });
         
         // Save to localStorage (cache)
@@ -185,17 +240,17 @@ function processConfig(data) {
 function processAllocations(data) {
     if (data.length < 2) return [];
     return data.slice(1).map(row => ({
-        id: row[0],
-        bulan: row[1],
-        namaJatah: row[2],
-        alokasi: parseFloat(row[3]) || 0,
-        terpakai: parseFloat(row[4]) || 0,
-        sisa: parseFloat(row[5]) || 0,
-        progress: parseInt(row[6]) || 0,
-        status: row[7] || 'Aman',
-        warningLevel: parseInt(row[8]) || 80,
-        kategoriInclude: row[9] ? row[9].split(',') : [],
-        color: row[10] || '#6B7280'
+        id: row[0],               // Column A = ID
+        bulan: row[1],            // Column B = Bulan
+        namaJatah: row[2],        // Column C = Nama Jatah
+        alokasi: parseFloat(row[3]) || 0,     // Column D = Alokasi
+        terpakai: parseFloat(row[4]) || 0,    // Column E = Terpakai
+        sisa: parseFloat(row[5]) || 0,        // Column F = Sisa
+        progress: parseInt(row[6]) || 0,      // Column G = Progress
+        status: row[7] || 'Aman',             // Column H = Status
+        warningLevel: parseInt(row[8]) || 80, // Column I = Warning Level
+        kategoriInclude: row[9] ? row[9].split(',').map(k => k.trim()) : [], // Column J = Kategori Include
+        color: row[10] || '#6B7280'           // Column K = Color
     }));
 }
 
@@ -230,6 +285,7 @@ function saveToCache() {
         localStorage.setItem('dompetku_allocations', JSON.stringify(allocations));
         localStorage.setItem('dompetku_debts', JSON.stringify(debts));
         localStorage.setItem('dompetku_lastUpdate', new Date().toISOString());
+        console.log('✅ Data cached successfully');
     } catch (e) {
         console.error('Cache save error:', e);
     }
@@ -326,7 +382,17 @@ function formatCurrency(amount) {
 
 function formatDate(dateString) {
     if (!dateString) return '-';
-    const date = new Date(dateString);
+    
+    // Handle both formats
+    let date;
+    if (typeof dateString === 'string' && dateString.includes('/')) {
+        // DD/MM/YYYY format
+        const parts = dateString.split('/');
+        date = new Date(parts[2], parts[1] - 1, parts[0]);
+    } else {
+        date = new Date(dateString);
+    }
+    
     return date.toLocaleDateString('id-ID', {
         day: '2-digit',
         month: 'short',
@@ -336,11 +402,29 @@ function formatDate(dateString) {
 
 function formatDateShort(dateString) {
     if (!dateString) return '-';
-    const date = new Date(dateString);
+    
+    // Handle both formats
+    let date;
+    if (typeof dateString === 'string' && dateString.includes('/')) {
+        // DD/MM/YYYY format
+        const parts = dateString.split('/');
+        date = new Date(parts[2], parts[1] - 1, parts[0]);
+    } else {
+        date = new Date(dateString);
+    }
+    
     return date.toLocaleDateString('id-ID', {
         day: '2-digit',
         month: '2-digit'
     });
+}
+
+function formatMonthYear(monthStr) {
+    // YYYY-MM → "Februari 2025"
+    if (!monthStr) return '-';
+    const [year, month] = monthStr.split('-');
+    const date = new Date(year, parseInt(month) - 1);
+    return date.toLocaleDateString('id-ID', { month: 'long', year: 'numeric' });
 }
 
 // ============================================
@@ -541,10 +625,10 @@ async function refreshData() {
     try {
         await loadAllData();
         initDashboard();
-        showAlert('Data berhasil diperbarui!', 'success');
+        showAlert('✅ Data berhasil diperbarui!', 'success');
     } catch (error) {
         console.error('Refresh error:', error);
-        showAlert('Gagal memperbarui data.', 'error');
+        showAlert('❌ Gagal memperbarui data.', 'error');
     } finally {
         hideLoading();
     }

@@ -606,10 +606,13 @@ function switchTransactionTab(tab) {
         // Change label
         document.getElementById('labelAkunDari').textContent = 'Akun';
         
-        // Filter categories
-        const categoryType = tab === 'pemasukan' ? 'Pemasukan' : 'Pengeluaran Dasar,Pengeluaran Lain';
+        // Filter categories by type
+        const categoryType = tab === 'pemasukan' ? 'Pemasukan' : 'Pengeluaran';
         const filteredCategories = categories.filter(c => {
-            return c.status === 'Aktif' && categoryType.includes(c.tipe);
+            return c.status === 'Aktif' && (
+                c.tipe === categoryType || 
+                c.tipe.includes(categoryType)
+            );
         });
         
         kategoriSelect.innerHTML = '<option value="">Pilih Kategori</option>' + 
@@ -620,13 +623,13 @@ function switchTransactionTab(tab) {
 }
 
 // ============================================
-// SUBMIT TRANSACTION
+// SUBMIT TRANSACTION - IMPROVED
 // ============================================
 async function submitTransaction(event) {
     event.preventDefault();
     
     const tipe = document.getElementById('transactionTipe').value;
-    const tanggal = document.getElementById('transactionTanggal').value;
+    const tanggalInput = document.getElementById('transactionTanggal').value; // YYYY-MM-DD from input
     const kategori = document.getElementById('transactionKategori').value;
     const akun = document.getElementById('transactionAkun').value;
     const akunTujuan = document.getElementById('transactionAkunTujuan').value;
@@ -634,7 +637,7 @@ async function submitTransaction(event) {
     const keterangan = document.getElementById('transactionKeterangan').value;
     
     // Validation
-    if (!tanggal || !akun || !nominal) {
+    if (!tanggalInput || !akun || !nominal) {
         showAlert('Mohon isi semua field yang diperlukan!', 'error');
         return;
     }
@@ -658,10 +661,10 @@ async function submitTransaction(event) {
     showLoading();
     
     try {
-        // Call Apps Script
+        // Send as YYYY-MM-DD (internal format)
         const result = await callAppsScript('addTransaction', {
             tipe: tipe,
-            tanggal: tanggal,
+            tanggal: tanggalInput, // Already in YYYY-MM-DD format
             kategori: tipe === 'Transfer' ? 'Transfer' : kategori,
             akun: akun,
             akunTujuan: akunTujuan || '',
@@ -670,19 +673,14 @@ async function submitTransaction(event) {
         });
         
         if (result.success) {
-            // Reload data
             await loadAllData();
-            
-            // Re-render dashboard & transactions
             initDashboard();
+            
             if (document.getElementById('page-transactions').classList.contains('active')) {
                 initTransactionsPage();
             }
             
-            // Close modal
             closeAddTransactionModal();
-            
-            // Show success
             hideLoading();
             showAlert('✅ Transaksi berhasil ditambahkan!', 'success');
         } else {

@@ -2,9 +2,11 @@
 // DOMPET KU - KONFIGURASI
 // ============================================
 
-// Google Sheets Configuration
+// Google Sheets Configuration - HANYA SPREADSHEET ID
 const SPREADSHEET_ID = '1EFAvKsfmDZtQMIGgSxlmKRlxU752_brCmzZUX3HJdoM';
-const API_KEY = 'AIzaSyBYxMfJkJSaaKLXcjd2y-0RYBNdFetfz_I';
+
+// ❌ API KEY DIHAPUS - SEMUA READ VIA APPS SCRIPT
+// const API_KEY = 'AIzaSyBYxMfJkJSaaKLXcjd2y-0RYBNdFetfz_I'; // REMOVED FOR SECURITY
 
 // Google Apps Script Web App URL
 const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxJdKMW6ttLBILdavjsEcocJzpBdoxvq1kml59XX1z9vZGrxTYZ3pLqtc1ia3N_xCo5/exec';
@@ -27,21 +29,20 @@ const WA_CONFIG = {
     number: '62895397978257'
 };
 
-// API Base URLs
-const SHEETS_API_BASE = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}`;
-
-// Helper function to get sheet URL
-function getSheetUrl(sheetName, range = '') {
-    const fullRange = range ? `${sheetName}!${range}` : sheetName;
-    return `${SHEETS_API_BASE}/values/${fullRange}?key=${API_KEY}`;
-}
+// ============================================
+// DATE FORMAT CONSTANTS
+// ============================================
+const DATE_FORMAT = {
+    INTERNAL: 'YYYY-MM-DD',  // Untuk database & logic
+    DISPLAY: 'DD/MM/YYYY'     // Untuk display ke user
+};
 
 // ============================================
-// Call Apps Script - MENGGUNAKAN GET REQUEST
+// CALL APPS SCRIPT - IMPROVED ERROR HANDLING
 // ============================================
-async function callAppsScript(action, data) {
+async function callAppsScript(action, data = {}) {
     try {
-        console.log('📤 Calling Apps Script:', action, data);
+        console.log('📤 Calling Apps Script:', action);
         
         // Encode data sebagai query parameter
         const params = new URLSearchParams({
@@ -51,29 +52,44 @@ async function callAppsScript(action, data) {
         
         const url = `${APPS_SCRIPT_URL}?${params.toString()}`;
         
-        console.log('🔗 Request URL:', url);
+        // Gunakan GET request dengan timeout
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 30000); // 30s timeout
         
-        // Gunakan GET request (no CORS preflight!)
         const response = await fetch(url, {
             method: 'GET',
-            redirect: 'follow'
+            redirect: 'follow',
+            signal: controller.signal
         });
         
-        console.log('📥 Response status:', response.status);
+        clearTimeout(timeoutId);
         
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
         
         const result = await response.json();
-        console.log('✅ Apps Script result:', result);
         
+        if (!result.success) {
+            console.error('❌ Apps Script returned error:', result.message);
+            throw new Error(result.message || 'Unknown error from server');
+        }
+        
+        console.log('✅ Apps Script success:', result);
         return result;
         
     } catch (error) {
         console.error('❌ Apps Script error:', error);
-        throw error;
+        
+        // User-friendly error messages
+        if (error.name === 'AbortError') {
+            throw new Error('Request timeout - silakan coba lagi');
+        } else if (error.message.includes('Failed to fetch')) {
+            throw new Error('Tidak ada koneksi internet');
+        } else {
+            throw error;
+        }
     }
 }
 
-console.log('✅ config.js loaded');
+console.log('✅ config.js loaded (SECURE VERSION)');

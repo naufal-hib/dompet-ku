@@ -1,5 +1,5 @@
 // ============================================
-// DOMPET KU - DASHBOARD MODULE
+// DOMPET KU - DASHBOARD MODULE (IMPROVED)
 // ============================================
 
 // ============================================
@@ -8,16 +8,9 @@
 function initDashboard() {
     console.log('🎨 Rendering dashboard...');
     
-    // Render overview cards
     renderOverviewCards();
-    
-    // Render accounts list
     renderAccountsList();
-    
-    // Render recent transactions
     renderRecentTransactions();
-    
-    // Render expense chart
     renderExpenseChart();
 }
 
@@ -48,54 +41,53 @@ function renderOverviewCards() {
     
     const saldoBulanIni = totalPemasukan - totalPengeluaran;
     
-    // Calculate change vs last month (simplified - just show positive)
-    const changePercent = 5; // Placeholder
-    
-    // Update DOM - FIXED IDs!
-    const totalAsetEl = document.getElementById('totalAset');
-    const asetChangeEl = document.getElementById('asetChange');
-    const totalPemasukanEl = document.getElementById('totalPemasukan'); // ✅ FIXED
-    const totalPengeluaranEl = document.getElementById('totalPengeluaran'); // ✅ FIXED
-    const saldoBulanIniEl = document.getElementById('saldoBulanIni'); // ✅ FIXED
-    
-    console.log('Elements found:', {
-        totalAset: !!totalAsetEl,
-        asetChange: !!asetChangeEl,
-        totalPemasukan: !!totalPemasukanEl,
-        totalPengeluaran: !!totalPengeluaranEl,
-        saldoBulanIni: !!saldoBulanIniEl
+    // Calculate change vs last month
+    const lastMonth = getLastMonth(currentMonth);
+    const lastMonthTransactions = transactions.filter(t => {
+        const bulan = getMonthFromDate(t.tanggal);
+        return bulan === lastMonth;
     });
     
+    const lastMonthTotal = lastMonthTransactions
+        .filter(t => t.tipe === 'Pemasukan')
+        .reduce((sum, t) => sum + t.nominal, 0) - 
+        lastMonthTransactions
+        .filter(t => t.tipe === 'Pengeluaran')
+        .reduce((sum, t) => sum + t.nominal, 0);
+    
+    let changePercent = 0;
+    let changeIcon = '→';
+    if (lastMonthTotal > 0) {
+        changePercent = Math.round(((saldoBulanIni - lastMonthTotal) / lastMonthTotal) * 100);
+        changeIcon = changePercent > 0 ? '↑' : changePercent < 0 ? '↓' : '→';
+    }
+    
+    // Update DOM
+    const totalAsetEl = document.getElementById('totalAset');
+    const asetChangeEl = document.getElementById('asetChange');
+    const totalPemasukanEl = document.getElementById('totalPemasukan');
+    const totalPengeluaranEl = document.getElementById('totalPengeluaran');
+    const saldoBulanIniEl = document.getElementById('saldoBulanIni');
+    
     if (totalAsetEl) totalAsetEl.textContent = formatCurrency(totalAset);
-    if (asetChangeEl) asetChangeEl.textContent = `↑ +${changePercent}% vs bulan lalu`;
+    if (asetChangeEl) {
+        asetChangeEl.textContent = `${changeIcon} ${Math.abs(changePercent)}% vs bulan lalu`;
+        asetChangeEl.className = changePercent >= 0 ? 'text-xs sm:text-sm text-green-600' : 'text-xs sm:text-sm text-red-600';
+    }
     
     if (totalPemasukanEl) {
         totalPemasukanEl.textContent = formatCurrency(totalPemasukan);
-        console.log('✅ Updated totalPemasukan:', formatCurrency(totalPemasukan));
-    } else {
-        console.error('❌ totalPemasukan element not found!');
     }
     
     if (totalPengeluaranEl) {
         totalPengeluaranEl.textContent = formatCurrency(totalPengeluaran);
-        console.log('✅ Updated totalPengeluaran:', formatCurrency(totalPengeluaran));
-    } else {
-        console.error('❌ totalPengeluaran element not found!');
     }
     
     if (saldoBulanIniEl) {
         saldoBulanIniEl.textContent = formatCurrency(saldoBulanIni);
-        // Change color based on positive/negative
-        if (saldoBulanIni >= 0) {
-            saldoBulanIniEl.classList.remove('text-red-600');
-            saldoBulanIniEl.classList.add('text-blue-600');
-        } else {
-            saldoBulanIniEl.classList.remove('text-blue-600');
-            saldoBulanIniEl.classList.add('text-red-600');
-        }
-        console.log('✅ Updated saldoBulanIni:', formatCurrency(saldoBulanIni));
-    } else {
-        console.error('❌ saldoBulanIni element not found!');
+        saldoBulanIniEl.className = saldoBulanIni >= 0 ? 
+            'text-2xl sm:text-3xl font-bold text-blue-600' : 
+            'text-2xl sm:text-3xl font-bold text-red-600';
     }
     
     console.log('Dashboard values:', {
@@ -106,6 +98,20 @@ function renderOverviewCards() {
         transactionsCount: thisMonthTransactions.length,
         currentMonth: currentMonth
     });
+}
+
+// ============================================
+// HELPER: GET LAST MONTH
+// ============================================
+function getLastMonth(monthStr) {
+    const [year, month] = monthStr.split('-').map(Number);
+    const date = new Date(year, month - 1, 1);
+    date.setMonth(date.getMonth() - 1);
+    
+    const lastYear = date.getFullYear();
+    const lastMonth = String(date.getMonth() + 1).padStart(2, '0');
+    
+    return `${lastYear}-${lastMonth}`;
 }
 
 // ============================================
@@ -171,10 +177,14 @@ function renderRecentTransactions() {
     const container = document.getElementById('recentTransactions');
     if (!container) return;
     
-    // Get 5 most recent transactions
-    const recentTrx = transactions
-        .sort((a, b) => new Date(b.created) - new Date(a.created))
-        .slice(0, 5);
+    // Get 5 most recent transactions - sort by tanggal DESC
+    const sortedTransactions = [...transactions].sort((a, b) => {
+        const dateA = new Date(convertToInternalDate(a.tanggal));
+        const dateB = new Date(convertToInternalDate(b.tanggal));
+        return dateB - dateA;
+    });
+    
+    const recentTrx = sortedTransactions.slice(0, 5);
     
     if (recentTrx.length === 0) {
         container.innerHTML = `
@@ -195,14 +205,15 @@ function renderRecentTransactions() {
         const category = categories.find(c => c.nama === trx.kategori);
         const icon = category ? category.icon : '📌';
         const isIncome = trx.tipe === 'Pemasukan';
-        const amountClass = isIncome ? 'text-green-600' : 'text-red-600';
-        const amountPrefix = isIncome ? '+' : '-';
+        const isTransfer = trx.tipe === 'Transfer';
+        const amountClass = isIncome ? 'text-green-600' : isTransfer ? 'text-blue-600' : 'text-red-600';
+        const amountPrefix = isIncome ? '+' : isTransfer ? '↔' : '-';
         
         return `
             <div class="transaction-card">
                 <div class="flex items-center flex-1 min-w-0">
                     <div class="transaction-category">${icon}</div>
-                    <div class="flex-1 min-w-0">
+                    <div class="flex-1 min-w-0 ml-3">
                         <p class="text-sm font-semibold text-gray-900 truncate">${trx.kategori}</p>
                         <p class="text-xs text-gray-500 truncate">${trx.keterangan || trx.akun}</p>
                         <p class="text-xs text-gray-400">${formatDateShort(trx.tanggal)}</p>
@@ -218,4 +229,4 @@ function renderRecentTransactions() {
     }).join('');
 }
 
-console.log('✅ dashboard.js loaded');
+console.log('✅ dashboard.js loaded (IMPROVED VERSION)');
